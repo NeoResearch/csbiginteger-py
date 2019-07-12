@@ -3,7 +3,8 @@ all:
 
 # test python
 run:
-	export LD_LIBRARY_PATH=. && ./test.py
+	./test.py
+#	export LD_LIBRARY_PATH=. && ./test.py
 
 clean:
 	#rm build/*.so 
