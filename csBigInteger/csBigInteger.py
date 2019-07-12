@@ -14,21 +14,24 @@ csbiginteger_lib.csbiginteger_init_empty.restype  = ctypes.c_int
 #to_int (32 bits)
 csbiginteger_lib.csbiginteger_to_int.argtypes = [ctypes.c_void_p, ctypes.c_int]
 csbiginteger_lib.csbiginteger_to_int.restype  = ctypes.c_int
-# csbiginteger_init_i
-csbiginteger_lib.csbiginteger_init_i.argtypes = [ctypes.c_int, ctypes.c_void_p, ctypes.c_int]
-csbiginteger_lib.csbiginteger_init_i.restype  = ctypes.c_int
+#to_long (64 bits)
+csbiginteger_lib.csbiginteger_to_long.argtypes = [ctypes.c_void_p, ctypes.c_int]
+csbiginteger_lib.csbiginteger_to_long.restype  = ctypes.c_long
+# csbiginteger_init_l (int64)
+csbiginteger_lib.csbiginteger_init_l.argtypes = [ctypes.c_long, ctypes.c_void_p, ctypes.c_int]
+csbiginteger_lib.csbiginteger_init_l.restype  = ctypes.c_int
 
 
 class BigInteger:
     # how to pass null parameters, or multiple?
-    def __init__(self, intv = 0):
+    def __init__(self, longv = 0):
         self.std_size = 256 # 256 bytes, standard size (TODO: improve this with better logic, but now it's enough)
         self._datasize = self.std_size
         self._data = (ctypes.c_uint8*self._datasize)()
-        if intv == 0:
+        if longv == 0:
             sz = csbiginteger_lib.csbiginteger_init_empty(self._data, self._datasize)
         else:
-            sz = csbiginteger_lib.csbiginteger_init_i(intv, self._data, self._datasize)
+            sz = csbiginteger_lib.csbiginteger_init_l(longv, self._data, self._datasize)
         if sz == 0:
             raise ValueError('Something wrong with BigInteger. Zero size.')
         self._length = sz    
@@ -39,3 +42,5 @@ class BigInteger:
     def toInt(self):
         return csbiginteger_lib.csbiginteger_to_int(self._data, self._length)
 
+    def toLong(self):
+        return csbiginteger_lib.csbiginteger_to_long(self._data, self._length)
