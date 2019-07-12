@@ -35,7 +35,7 @@ csbiginteger_lib.csbiginteger_sub.argtypes = [ctypes.c_void_p, ctypes.c_int, cty
 csbiginteger_lib.csbiginteger_sub.restype  = ctypes.c_int
 
 class BigInteger(object):
-    # how to pass null parameters, or multiple?
+    # param may be: int, bytearray, string (parsed with base)
     def __init__(self, param = 0, base = 10):
         self.std_size = 256 # 256 bytes, standard size (TODO: improve this with better logic, but now it's enough)
         if type(param) is int:
@@ -63,7 +63,7 @@ class BigInteger(object):
                 raise ValueError('Something wrong with BigInteger. Zero size.')
             self._length = sz
         
-        # 
+        # more options here?
 
     def length(self):
         return self._length
