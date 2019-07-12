@@ -55,11 +55,19 @@ def main():
     print('toString: ', bigff.toString())
     print('')
 
-    big100 = BigInteger('100')
+    big100 = BigInteger('100') # base 10 implicit
     print('length = ', big100.length())
     print('toInt = ', big100.toInt())
     print('toLong = ', big100.toLong())
     print('toString: ', big100.toString())
+    print('')
+
+    big0001 = BigInteger('0x0001', 16) # big-endian input string
+    print('length = ', big0001.length())
+    print('toInt = ', big0001.toInt())
+    print('toLong = ', big0001.toLong())
+    print('toString: ', big0001.toString())
+
     return 0
 
 if __name__ == '__main__':
