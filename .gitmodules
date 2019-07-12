@@ -1,0 +1,3 @@
+[submodule "csBigIntegerpp"]
+	path = csBigIntegerpp
+	url = https://github.com/NeoResearch/csBigInteger.cpp.git
