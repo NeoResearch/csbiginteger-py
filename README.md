@@ -17,22 +17,22 @@ from csbiginteger.BigInteger import BigInteger
 
 def main():
     big = BigInteger()
-    print 'length = ', big.length()
-    print 'toInt = ', big.toInt()
-    print 'toString: ', big.toString()
-    print ''
+    print('length = ', big.length())
+    print('toInt = ', big.toInt())
+    print('toString: ', big.toString())
+    print('')
 
     bigM1 = BigInteger(-1)
-    print 'length = ', bigM1.length()
-    print 'toInt = ', bigM1.toInt()
-    print 'toString: ', bigM1.toString()
-    print ''
+    print('length = ', bigM1.length())
+    print('toInt = ', bigM1.toInt())
+    print('toString: ', bigM1.toString())
+    print('')
 
     big4293967296 = BigInteger(4293967296)
-    print 'length = ', big4293967296.length()
-    print 'toInt = ', big4293967296.toInt()
-    print 'toLong = ', big4293967296.toLong()
-    print 'toString: ', big4293967296.toString()
+    print('length = ', big4293967296.length())
+    print('toInt = ', big4293967296.toInt())
+    print('toLong = ', big4293967296.toLong())
+    print('toString: ', big4293967296.toString())
 
     return 0
 ```
