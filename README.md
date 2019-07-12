@@ -13,6 +13,8 @@ First, you need to have `csbiginteger.so` shared library (just type `make`).
 After that, this `test.py` code should work (`make run`):
 
 ```py
+from csbiginteger.BigInteger import BigInteger
+
 def main():
     big = BigInteger()
     print 'length = ', big.length()

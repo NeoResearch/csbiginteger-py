@@ -55,4 +55,4 @@ class BigInteger(object):
         rbool = csbiginteger_lib.csbiginteger_to_string(self._data, self._length, base, strdata, strsize)
         if not rbool:
             raise ValueError('Something wrong with BigInteger ToString()')
-        return strdata.value
+        return strdata.value.decode()
