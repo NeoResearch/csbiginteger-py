@@ -37,5 +37,5 @@ class BigInteger:
         return self._length
 
     def toInt(self):
-        return csbiginteger_lib.csbiginteger_to_int(self._data, self._datasize)
+        return csbiginteger_lib.csbiginteger_to_int(self._data, self._length)
 
