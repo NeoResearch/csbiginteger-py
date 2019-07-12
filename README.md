@@ -8,7 +8,7 @@ This project uses csBigInteger.cpp portable C++ project: https://github.com/neor
 
 ### build dependencies
 
-First, you need to have `csbiginteger.so` shared library (just type `make`).
+First, you need to have `csbiginteger.so` shared library (just type `make`). Don't worry, we are already shipping a `linux x86-64` library for you (no default windows build yet.. help is appreciated!).
 
 **Important:** Remember to clone `csBigInteger.cpp` portable submodule (`git clone --recursive`).
 
