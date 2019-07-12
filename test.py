@@ -31,6 +31,7 @@ def main():
     print 'length = ', big4293967296.length()
     print 'toInt = ', big4293967296.toInt()
     print 'toLong = ', big4293967296.toLong()
+    print 'toString: ', big4293967296.toString()
 
     return 0
 
