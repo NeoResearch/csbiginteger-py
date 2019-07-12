@@ -17,6 +17,12 @@ def main():
     big = BigInteger()
     print 'length = ', big.length()
     print 'toInt = ', big.toInt()
+    print 'toString: ', big.toString()
+
+    bigM1 = BigInteger(-1)
+    print 'length = ', bigM1.length()
+    print 'toInt = ', bigM1.toInt()
+    print 'toString: ', bigM1.toString()
     return 0
 ```
 
@@ -25,6 +31,10 @@ Empty BigInteger is expected to be byte array 0x00, with size = 1 (byte) and int
 ```
 length =  1
 toInt =  0
+toString:  0x00
+length =  1
+toInt =  -1
+toString:  0xff
 ```
 
 ## LICENSE
