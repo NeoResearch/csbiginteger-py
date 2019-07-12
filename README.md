@@ -6,13 +6,15 @@ This project is part of the [csBigInteger](https://github.com/neoresearch/csBigI
 
 This project uses csBigInteger.cpp portable C++ project: https://github.com/neoresearch/csBigInteger.cpp
 
-## How to use it?
+### build dependencies
 
 First, you need to have `csbiginteger.so` shared library (just type `make`).
 
-**Important:** Remember to clone `csBigInteger.cpp` portable submodule.
+**Important:** Remember to clone `csBigInteger.cpp` portable submodule (`git clone --recursive`).
 
-After that, this `test.py` code should work (`make run`):
+## How to use it?
+
+Try `test.py` code, it should work! (or just type `make run`):
 
 ```py
 from csbiginteger.BigInteger import BigInteger
