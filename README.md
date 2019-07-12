@@ -1,6 +1,6 @@
 # csBigInteger.py
 
-## csBigInteger for Python
+## csBigInteger for Python 3
 
 This project is part of the [csBigInteger](https://github.com/neoresearch/csBigInteger) macro project, a C# BigInteger implementation on Python 
 
