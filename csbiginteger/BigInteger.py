@@ -68,18 +68,18 @@ class BigInteger(object):
     def length(self):
         return self._length
 
-    def toInt(self):
+    def to_int(self):
         return csbiginteger_lib.csbiginteger_to_int(self._data, self._length)
 
-    def toLong(self):
+    def to_long(self):
         return csbiginteger_lib.csbiginteger_to_long(self._data, self._length)
 
-    def toString(self, base=16):
+    def to_str(self, base=16):
         strsize = self.std_size*2
         strdata = (ctypes.c_char*strsize)()
         rbool = csbiginteger_lib.csbiginteger_to_string(self._data, self._length, base, strdata, strsize)
         if not rbool:
-            raise ValueError('Something wrong with BigInteger ToString()')
+            raise ValueError('Something wrong with BigInteger to_str()')
         return strdata.value.decode()
 
     def add(self, other):

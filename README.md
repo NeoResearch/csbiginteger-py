@@ -20,56 +20,56 @@ from csbiginteger.BigInteger import BigInteger
 def main():
     big = BigInteger()
     print('length = ', big.length())
-    print('toInt = ', big.toInt())
-    print('toString: ', big.toString())
+    print('to_int = ', big.to_int())
+    print('to_str: ', big.to_str())
     print('')
 
     bigM1 = BigInteger(-1)
     print('length = ', bigM1.length())
-    print('toInt = ', bigM1.toInt())
-    print('toString: ', bigM1.toString())
+    print('to_int = ', bigM1.to_int())
+    print('to_str: ', bigM1.to_str())
     print('')
 
     big4293967296 = BigInteger(4293967296)
     print('length = ', big4293967296.length())
-    print('toInt = ', big4293967296.toInt())
-    print('toLong = ', big4293967296.toLong())
-    print('toString: ', big4293967296.toString())
+    print('to_int = ', big4293967296.to_int())
+    print('to_long = ', big4293967296.to_long())
+    print('to_str: ', big4293967296.to_str())
     print('')
 
     bigff = BigInteger(b'\xff')
     print('length = ', bigff.length())
-    print('toInt = ', bigff.toInt())
-    print('toLong = ', bigff.toLong())
-    print('toString: ', bigff.toString())
+    print('to_int = ', bigff.to_int())
+    print('to_long = ', bigff.to_long())
+    print('to_str: ', bigff.to_str())
     print('')
 
     big100 = BigInteger('100') # base 10 implicit
     print('length = ', big100.length())
-    print('toInt = ', big100.toInt())
-    print('toLong = ', big100.toLong())
-    print('toString: ', big100.toString())
+    print('to_int = ', big100.to_int())
+    print('to_long = ', big100.to_long())
+    print('to_str: ', big100.to_str())
     print('')
 
     big0001 = BigInteger('0x0001', 16) # big-endian input string
     print('length = ', big0001.length())
-    print('toInt = ', big0001.toInt())
-    print('toLong = ', big0001.toLong())
-    print('toString: ', big0001.toString())
+    print('to_int = ', big0001.to_int())
+    print('to_long = ', big0001.to_long())
+    print('to_str: ', big0001.to_str())
     print('')
 
     big101 = big100.add(big0001) # big100 + big0001
     print('length = ', big101.length())
-    print('toInt = ', big101.toInt())
-    print('toLong = ', big101.toLong())
-    print('toString: ', big101.toString())
+    print('to_int = ', big101.to_int())
+    print('to_long = ', big101.to_long())
+    print('to_str: ', big101.to_str())
     print('')
 
     big99 = big100.sub(big0001) # big100 - big0001
     print('length = ', big99.length())
-    print('toInt = ', big99.toInt())
-    print('toLong = ', big99.toLong())
-    print('toString: ', big99.toString())
+    print('to_int = ', big99.to_int())
+    print('to_long = ', big99.to_long())
+    print('to_str: ', big99.to_str())
 
 
     return 0
@@ -79,42 +79,42 @@ Empty BigInteger is expected to be byte array 0x00, with size = 1 (byte) and int
 
 ```
 length =  1
-toInt =  0
-toString:  0x00
+to_int =  0
+to_str:  0x00
 
 length =  1
-toInt =  -1
-toString:  0xff
+to_int =  -1
+to_str:  0xff
 
 length =  5
-toInt =  -1000000
-toLong =  4293967296
-toString:  0x00fff0bdc0
+to_int =  -1000000
+to_long =  4293967296
+to_str:  0x00fff0bdc0
 
 length =  1
-toInt =  -1
-toLong =  -1
-toString:  0xff
+to_int =  -1
+to_long =  -1
+to_str:  0xff
 
 length =  1
-toInt =  100
-toLong =  100
-toString:  0x64
+to_int =  100
+to_long =  100
+to_str:  0x64
 
 length =  1
-toInt =  1
-toLong =  1
-toString:  0x01
+to_int =  1
+to_long =  1
+to_str:  0x01
 
 length =  1
-toInt =  101
-toLong =  101
-toString:  0x65
+to_int =  101
+to_long =  101
+to_str:  0x65
 
 length =  1
-toInt =  99
-toLong =  99
-toString:  0x63
+to_int =  99
+to_long =  99
+to_str:  0x63
 
 ```
 
