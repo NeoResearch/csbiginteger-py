@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import ctypes
 #from ctypes import * 
@@ -7,7 +7,8 @@ import os
 import os.path
 import re
 
-csbiginteger_lib = ctypes.cdll.LoadLibrary('csBigInteger/csbiginteger.so')
+csbiginteger_lib = ctypes.cdll.LoadLibrary('csbiginteger/csbiginteger.so')
+#csbiginteger_lib = ctypes.cdll.LoadLibrary('./csbiginteger.so')
 # init_empty
 csbiginteger_lib.csbiginteger_init_empty.argtypes = [ctypes.c_void_p, ctypes.c_int]
 csbiginteger_lib.csbiginteger_init_empty.restype  = ctypes.c_int
@@ -25,7 +26,7 @@ csbiginteger_lib.csbiginteger_to_string.argtypes = [ctypes.c_void_p, ctypes.c_in
 csbiginteger_lib.csbiginteger_to_string.restype  = ctypes.c_bool
 
 
-class BigInteger:
+class BigInteger(object):
     # how to pass null parameters, or multiple?
     def __init__(self, longv = 0):
         self.std_size = 256 # 256 bytes, standard size (TODO: improve this with better logic, but now it's enough)
