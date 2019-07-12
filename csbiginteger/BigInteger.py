@@ -84,14 +84,14 @@ class BigInteger(object):
 
     def add(self, other):
         big3 = BigInteger() # create new array
-        ret = csbiginteger_lib.csbiginteger_add(self._data, self._length, other._data, other._length, big3._data, big3._length)
+        ret = csbiginteger_lib.csbiginteger_add(self._data, self._length, other._data, other._length, big3._data, big3._datasize)
         if ret == 0:
             raise ValueError('Something wrong with BigInteger add()')
         return big3
 
     def sub(self, other):
         big3 = BigInteger() # create new array
-        ret = csbiginteger_lib.csbiginteger_sub(self._data, self._length, other._data, other._length, big3._data, big3._length)
+        ret = csbiginteger_lib.csbiginteger_sub(self._data, self._length, other._data, other._length, big3._data, big3._datasize)
         if ret == 0:
             raise ValueError('Something wrong with BigInteger sub()')
         return big3
