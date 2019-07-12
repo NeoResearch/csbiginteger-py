@@ -40,6 +40,13 @@ def main():
     print('toInt = ', bigff.toInt())
     print('toLong = ', bigff.toLong())
     print('toString: ', bigff.toString())
+    print('')
+
+    big100 = BigInteger('100')
+    print('length = ', big100.length())
+    print('toInt = ', big100.toInt())
+    print('toLong = ', big100.toLong())
+    print('toString: ', big100.toString())
 
     return 0
 ```
@@ -64,6 +71,11 @@ length =  1
 toInt =  -1
 toLong =  -1
 toString:  0xff
+
+length =  1
+toInt =  100
+toLong =  100
+toString:  0x64
 ```
 
 ## LICENSE

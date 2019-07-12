@@ -53,7 +53,13 @@ def main():
     print('toInt = ', bigff.toInt())
     print('toLong = ', bigff.toLong())
     print('toString: ', bigff.toString())
+    print('')
 
+    big100 = BigInteger('100')
+    print('length = ', big100.length())
+    print('toInt = ', big100.toInt())
+    print('toLong = ', big100.toLong())
+    print('toString: ', big100.toString())
     return 0
 
 if __name__ == '__main__':

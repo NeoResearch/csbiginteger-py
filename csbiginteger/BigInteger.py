@@ -24,11 +24,14 @@ csbiginteger_lib.csbiginteger_init_l.restype  = ctypes.c_int
 # csbiginteger_to_string (byte* vb, int sz_vb, int base, char* sr, int sz_sr) -> bool
 csbiginteger_lib.csbiginteger_to_string.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_int, ctypes.c_char_p, ctypes.c_int]
 csbiginteger_lib.csbiginteger_to_string.restype  = ctypes.c_bool
+# csbiginteger_init_s(char* value, int base, byte* vr, int sz_vr);
+csbiginteger_lib.csbiginteger_init_s.argtypes = [ctypes.c_char_p, ctypes.c_int, ctypes.c_void_p, ctypes.c_int]
+csbiginteger_lib.csbiginteger_init_s.restype  = ctypes.c_int
 
 
 class BigInteger(object):
     # how to pass null parameters, or multiple?
-    def __init__(self, param = 0):
+    def __init__(self, param = 0, base = 10):
         self.std_size = 256 # 256 bytes, standard size (TODO: improve this with better logic, but now it's enough)
         if type(param) is int:
             self._datasize = self.std_size
@@ -43,8 +46,18 @@ class BigInteger(object):
             self._length = sz
         if type(param) is bytes:
             self._length = len(param)
-            self._datasize = self._length
+            self._datasize = self._length  # size is not standard, is less. exactly what is needed
             self._data = (ctypes.c_uint8*self._datasize).from_buffer(bytearray(param))
+        if type(param) is str:
+            self._datasize = self.std_size
+            self._data = (ctypes.c_uint8*self._datasize)()
+            strsize = len(param)
+            strdata = (ctypes.c_char*strsize).from_buffer(bytearray(param, 'ascii'))
+            sz = csbiginteger_lib.csbiginteger_init_s(strdata, base, self._data, self._datasize)
+            if sz == 0:
+                raise ValueError('Something wrong with BigInteger. Zero size.')
+            self._length = sz
+        
         # 
 
     def length(self):
