@@ -46,6 +46,13 @@ def main():
     print('toInt = ', big4293967296.toInt())
     print('toLong = ', big4293967296.toLong())
     print('toString: ', big4293967296.toString())
+    print('')
+
+    bigff = BigInteger(b'\xff')
+    print('length = ', bigff.length())
+    print('toInt = ', bigff.toInt())
+    print('toLong = ', bigff.toLong())
+    print('toString: ', bigff.toString())
 
     return 0
 

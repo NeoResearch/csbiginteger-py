@@ -33,6 +33,13 @@ def main():
     print('toInt = ', big4293967296.toInt())
     print('toLong = ', big4293967296.toLong())
     print('toString: ', big4293967296.toString())
+    print('')
+
+    bigff = BigInteger(b'\xff')
+    print('length = ', bigff.length())
+    print('toInt = ', bigff.toInt())
+    print('toLong = ', bigff.toLong())
+    print('toString: ', bigff.toString())
 
     return 0
 ```
@@ -52,6 +59,11 @@ length =  5
 toInt =  -1000000
 toLong =  4293967296
 toString:  0x00fff0bdc0
+
+length =  1
+toInt =  -1
+toLong =  -1
+toString:  0xff
 ```
 
 ## LICENSE
