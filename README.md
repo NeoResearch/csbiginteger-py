@@ -10,6 +10,8 @@ This project uses csBigInteger.cpp portable C++ project: https://github.com/neor
 
 First, you need to have `csbiginteger.so` shared library (just type `make`).
 
+**Important:** Remember to clone `csBigInteger.cpp` portable submodule.
+
 After that, this `test.py` code should work (`make run`):
 
 ```py
