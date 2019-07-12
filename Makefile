@@ -1,5 +1,5 @@
 all:
-	g++ --shared csBigIntegerpp/src/csBigIntegerLib.cpp csBigIntegerpp/src/BigInteger.cpp -lgmp -lgmpxx -o csBigInteger/csbiginteger.so -fPIC
+	g++ --shared csBigIntegerpp/src/csBigIntegerLib.cpp csBigIntegerpp/src/BigInteger.cpp -lgmp -lgmpxx -o csbiginteger/csbiginteger.so -fPIC
 
 # test python
 run:

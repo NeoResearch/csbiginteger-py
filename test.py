@@ -67,6 +67,21 @@ def main():
     print('toInt = ', big0001.toInt())
     print('toLong = ', big0001.toLong())
     print('toString: ', big0001.toString())
+    print('')
+
+    big101 = big100.add(big0001) # big100 + big0001
+    print('length = ', big101.length())
+    print('toInt = ', big101.toInt())
+    print('toLong = ', big101.toLong())
+    print('toString: ', big101.toString())
+    print('')
+
+    big99 = big100.sub(big0001) # big100 - big0001
+    print('length = ', big99.length())
+    print('toInt = ', big99.toInt())
+    print('toLong = ', big99.toLong())
+    print('toString: ', big99.toString())
+
 
     return 0
 

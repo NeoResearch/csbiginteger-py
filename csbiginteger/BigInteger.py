@@ -27,7 +27,12 @@ csbiginteger_lib.csbiginteger_to_string.restype  = ctypes.c_bool
 # csbiginteger_init_s(char* value, int base, byte* vr, int sz_vr);
 csbiginteger_lib.csbiginteger_init_s.argtypes = [ctypes.c_char_p, ctypes.c_int, ctypes.c_void_p, ctypes.c_int]
 csbiginteger_lib.csbiginteger_init_s.restype  = ctypes.c_int
-
+#csbiginteger_add(byte* big1, int sz_big1, byte* big2, int sz_big2, byte* vr, int sz_vr) -> int 
+csbiginteger_lib.csbiginteger_add.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_void_p, ctypes.c_int, ctypes.c_void_p, ctypes.c_int]
+csbiginteger_lib.csbiginteger_add.restype  = ctypes.c_int
+#csbiginteger_sub(byte* big1, int sz_big1, byte* big2, int sz_big2, byte* vr, int sz_vr) -> int
+csbiginteger_lib.csbiginteger_sub.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_void_p, ctypes.c_int, ctypes.c_void_p, ctypes.c_int]
+csbiginteger_lib.csbiginteger_sub.restype  = ctypes.c_int
 
 class BigInteger(object):
     # how to pass null parameters, or multiple?
@@ -76,3 +81,17 @@ class BigInteger(object):
         if not rbool:
             raise ValueError('Something wrong with BigInteger ToString()')
         return strdata.value.decode()
+
+    def add(self, other):
+        big3 = BigInteger() # create new array
+        ret = csbiginteger_lib.csbiginteger_add(self._data, self._length, other._data, other._length, big3._data, big3._length)
+        if ret == 0:
+            raise ValueError('Something wrong with BigInteger add()')
+        return big3
+
+    def sub(self, other):
+        big3 = BigInteger() # create new array
+        ret = csbiginteger_lib.csbiginteger_sub(self._data, self._length, other._data, other._length, big3._data, big3._length)
+        if ret == 0:
+            raise ValueError('Something wrong with BigInteger sub()')
+        return big3
