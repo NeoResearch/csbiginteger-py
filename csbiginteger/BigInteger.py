@@ -108,10 +108,18 @@ class BigInteger(object):
 
     # returns value in signed int32 limit (or exception)
     def to_int(self):
-        return csbiginteger_lib.csbiginteger_to_int(self._data, self._length)
+        if self.__gt__(2**31-1):
+            raise OverflowError("overflow on signed int32")
+        if self.__lt__(-2**31):
+            raise OverflowError("underflow on signed int32")
+        return int(str(self))
 
     def to_long(self):
-        return csbiginteger_lib.csbiginteger_to_long(self._data, self._length)
+        if self.__gt__(2**63-1):
+            raise OverflowError("overflow on signed int64 (long)")
+        if self.__lt__(-2**63):
+            raise OverflowError("underflow on signed int64 (long)")
+        return int(str(self))
 
     # bytearray is returned in little-endian format
     def to_bytearray(self):
