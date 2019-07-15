@@ -132,6 +132,7 @@ class BigInteger(object):
             self._data, self._length, other._data, other._length, big3._data, big3._datasize)
         if ret == 0:
             raise ValueError('Something wrong with BigInteger add()')
+        big3._length = ret # update correct length
         return big3
 
     def sub(self, other):
@@ -142,6 +143,7 @@ class BigInteger(object):
             self._data, self._length, other._data, other._length, big3._data, big3._datasize)
         if ret == 0:
             raise ValueError('Something wrong with BigInteger sub()')
+        big3._length = ret # update correct length
         return big3
 
     def mul(self, other):
@@ -152,6 +154,7 @@ class BigInteger(object):
             self._data, self._length, other._data, other._length, big3._data, big3._datasize)
         if ret == 0:
             raise ValueError('Something wrong with BigInteger mul()')
+        big3._length = ret # update correct length
         return big3
 
     def div(self, other):
@@ -162,6 +165,7 @@ class BigInteger(object):
             self._data, self._length, other._data, other._length, big3._data, big3._datasize)
         if ret == 0:
             raise ValueError('Something wrong with BigInteger div()')
+        big3._length = ret # update correct length
         return big3
 
     def mod(self, other):
@@ -172,6 +176,7 @@ class BigInteger(object):
             self._data, self._length, other._data, other._length, big3._data, big3._datasize)
         if ret == 0:
             raise ValueError('Something wrong with BigInteger mod()')
+        big3._length = ret # update correct length
         return big3
 
     def shl(self, other):
@@ -182,6 +187,7 @@ class BigInteger(object):
             self._data, self._length, other._data, other._length, big3._data, big3._datasize)
         if ret == 0:
             raise ValueError('Something wrong with BigInteger shl()')
+        big3._length = ret # update correct length
         return big3
 
     def shr(self, other):
@@ -192,6 +198,7 @@ class BigInteger(object):
             self._data, self._length, other._data, other._length, big3._data, big3._datasize)
         if ret == 0:
             raise ValueError('Something wrong with BigInteger shr()')
+        big3._length = ret # update correct length
         return big3
 
     def eq(self, other):
