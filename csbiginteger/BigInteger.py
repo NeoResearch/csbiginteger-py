@@ -34,6 +34,11 @@ csbiginteger_lib.csbiginteger_add.restype  = ctypes.c_int
 csbiginteger_lib.csbiginteger_sub.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_void_p, ctypes.c_int, ctypes.c_void_p, ctypes.c_int]
 csbiginteger_lib.csbiginteger_sub.restype  = ctypes.c_int
 
+# ======================================================================
+# BigInteger class stores a little-endian ctypes bytearray on self._data
+# The total allocated size of self._data is self._datasize (bytes), and its used size is self._length (bytes).
+# ======================================================================
+
 class BigInteger(object):
     # param may be: int, bytearray, bytes, string (parsed with base)
     # bytes and bytearray should be received in little-endian format (same as to_bytearray() returns)
