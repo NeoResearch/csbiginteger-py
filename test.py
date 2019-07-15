@@ -43,7 +43,7 @@ def main():
 
     big4293967296 = BigInteger(4293967296)
     print('length = ', len(big4293967296))
-    print('to_int = ', big4293967296.to_int())
+    print('to_int = OVERFLOW')#, big4293967296.to_int())
     print('to_long = ', big4293967296.to_long())
     print('to_str: ', big4293967296.to_str())
     print('')
