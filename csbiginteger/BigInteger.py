@@ -87,18 +87,8 @@ class BigInteger(object):
         # 256 bytes, standard size (TODO: improve this with better logic, but now it's enough)
         self.std_size = 256
         if type(param) is int:
-            self._datasize = self.std_size
-            self._data = (ctypes.c_uint8*self._datasize)()
-            sz = 0
-            if param == 0:
-                sz = csbiginteger_lib.csbiginteger_init_empty(
-                    self._data, self._datasize)
-            else:
-                sz = csbiginteger_lib.csbiginteger_init_l(
-                    param, self._data, self._datasize)
-            if sz == 0:
-                raise ValueError('Something wrong with BigInteger. Zero size.')
-            self._length = sz
+            param = str(param)  # convert to base-10 integer
+            base = 10  # force base 10
         if type(param) is bytearray:
             param = bytes(param)  # bytearray to bytes
         if type(param) is bytes:
@@ -220,21 +210,21 @@ class BigInteger(object):
             other = BigInteger(other)
         ret = csbiginteger_lib.csbiginteger_eq(
             self._data, self._length, other._data, other._length)
-        return ret # bool
+        return ret  # bool
 
     def lt(self, other):
         if type(other) is int:
             other = BigInteger(other)
         ret = csbiginteger_lib.csbiginteger_lt(
             self._data, self._length, other._data, other._length)
-        return ret # bool
+        return ret  # bool
 
     def gt(self, other):
         if type(other) is int:
             other = BigInteger(other)
         ret = csbiginteger_lib.csbiginteger_gt(
             self._data, self._length, other._data, other._length)
-        return ret # bool
+        return ret  # bool
 
     def __repr__(self):
         return str(self)
