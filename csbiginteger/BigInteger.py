@@ -9,10 +9,6 @@ import re
 
 csbiginteger_lib = ctypes.cdll.LoadLibrary('csbiginteger/csbiginteger.so')
 #csbiginteger_lib = ctypes.cdll.LoadLibrary('./csbiginteger.so')
-# init_empty
-csbiginteger_lib.csbiginteger_init_empty.argtypes = [
-    ctypes.c_void_p, ctypes.c_int]
-csbiginteger_lib.csbiginteger_init_empty.restype = ctypes.c_int
 # to_int (32 bits)
 csbiginteger_lib.csbiginteger_to_int.argtypes = [ctypes.c_void_p, ctypes.c_int]
 csbiginteger_lib.csbiginteger_to_int.restype = ctypes.c_int
@@ -20,10 +16,6 @@ csbiginteger_lib.csbiginteger_to_int.restype = ctypes.c_int
 csbiginteger_lib.csbiginteger_to_long.argtypes = [
     ctypes.c_void_p, ctypes.c_int]
 csbiginteger_lib.csbiginteger_to_long.restype = ctypes.c_long
-# csbiginteger_init_l (int64)
-csbiginteger_lib.csbiginteger_init_l.argtypes = [
-    ctypes.c_long, ctypes.c_void_p, ctypes.c_int]
-csbiginteger_lib.csbiginteger_init_l.restype = ctypes.c_int
 # csbiginteger_to_string (byte* vb, int sz_vb, int base, char* sr, int sz_sr) -> bool
 csbiginteger_lib.csbiginteger_to_string.argtypes = [
     ctypes.c_void_p, ctypes.c_int, ctypes.c_int, ctypes.c_char_p, ctypes.c_int]
