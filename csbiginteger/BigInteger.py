@@ -52,6 +52,14 @@ csbiginteger_lib.csbiginteger_div.restype = ctypes.c_int
 csbiginteger_lib.csbiginteger_mod.argtypes = [
     ctypes.c_void_p, ctypes.c_int, ctypes.c_void_p, ctypes.c_int, ctypes.c_void_p, ctypes.c_int]
 csbiginteger_lib.csbiginteger_mod.restype = ctypes.c_int
+# csbiginteger_shr(byte* big1, int sz_big1, byte* big2, int sz_big2, byte* vr, int sz_vr) -> int
+csbiginteger_lib.csbiginteger_shr.argtypes = [
+    ctypes.c_void_p, ctypes.c_int, ctypes.c_void_p, ctypes.c_int, ctypes.c_void_p, ctypes.c_int]
+csbiginteger_lib.csbiginteger_shr.restype = ctypes.c_int
+# csbiginteger_shl(byte* big1, int sz_big1, byte* big2, int sz_big2, byte* vr, int sz_vr) -> int
+csbiginteger_lib.csbiginteger_shl.argtypes = [
+    ctypes.c_void_p, ctypes.c_int, ctypes.c_void_p, ctypes.c_int, ctypes.c_void_p, ctypes.c_int]
+csbiginteger_lib.csbiginteger_shl.restype = ctypes.c_int
 # csbiginteger_eq(byte* big1, int sz_big1, byte* big2, int sz_big2) -> bool
 csbiginteger_lib.csbiginteger_eq.argtypes = [
     ctypes.c_void_p, ctypes.c_int, ctypes.c_void_p, ctypes.c_int]
@@ -187,6 +195,26 @@ class BigInteger(object):
             raise ValueError('Something wrong with BigInteger mod()')
         return big3
 
+    def shl(self, other):
+        if type(other) is int:
+            other = BigInteger(other)
+        big3 = BigInteger()  # create new array
+        ret = csbiginteger_lib.csbiginteger_shl(
+            self._data, self._length, other._data, other._length, big3._data, big3._datasize)
+        if ret == 0:
+            raise ValueError('Something wrong with BigInteger shl()')
+        return big3
+
+    def shr(self, other):
+        if type(other) is int:
+            other = BigInteger(other)
+        big3 = BigInteger()  # create new array
+        ret = csbiginteger_lib.csbiginteger_shr(
+            self._data, self._length, other._data, other._length, big3._data, big3._datasize)
+        if ret == 0:
+            raise ValueError('Something wrong with BigInteger shr()')
+        return big3
+
     def eq(self, other):
         if type(other) is int:
             other = BigInteger(other)
@@ -235,6 +263,12 @@ class BigInteger(object):
 
     def __mod__(self, other):
         return self.mod(other)
+
+    def __rshift__(self, other):
+        return self.shr(other)
+
+    def __lshift__(self, other):
+        return self.shl(other)
 
     # comparisons
     # -----------
