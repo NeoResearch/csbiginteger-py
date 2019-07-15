@@ -126,3 +126,9 @@ class BigInteger(object):
         if ret == 0:
             raise ValueError('Something wrong with BigInteger sub()')
         return big3
+
+    def __repr__(self):
+        return str(self)
+
+    def __str__(self):
+        return self.to_str(10)
