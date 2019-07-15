@@ -76,6 +76,9 @@ class BigInteger(object):
     def to_long(self):
         return csbiginteger_lib.csbiginteger_to_long(self._data, self._length)
 
+    def to_bytearray(self):
+        return bytearray(self._data)[:self._length]
+
     def to_str(self, base=16):
         strsize = self.std_size*2
         strdata = (ctypes.c_char*strsize)()
