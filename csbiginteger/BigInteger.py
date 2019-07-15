@@ -40,6 +40,18 @@ csbiginteger_lib.csbiginteger_add.restype = ctypes.c_int
 csbiginteger_lib.csbiginteger_sub.argtypes = [
     ctypes.c_void_p, ctypes.c_int, ctypes.c_void_p, ctypes.c_int, ctypes.c_void_p, ctypes.c_int]
 csbiginteger_lib.csbiginteger_sub.restype = ctypes.c_int
+# csbiginteger_mul(byte* big1, int sz_big1, byte* big2, int sz_big2, byte* vr, int sz_vr) -> int
+csbiginteger_lib.csbiginteger_mul.argtypes = [
+    ctypes.c_void_p, ctypes.c_int, ctypes.c_void_p, ctypes.c_int, ctypes.c_void_p, ctypes.c_int]
+csbiginteger_lib.csbiginteger_mul.restype = ctypes.c_int
+# csbiginteger_sub(byte* big1, int sz_big1, byte* big2, int sz_big2, byte* vr, int sz_vr) -> int
+csbiginteger_lib.csbiginteger_div.argtypes = [
+    ctypes.c_void_p, ctypes.c_int, ctypes.c_void_p, ctypes.c_int, ctypes.c_void_p, ctypes.c_int]
+csbiginteger_lib.csbiginteger_div.restype = ctypes.c_int
+# csbiginteger_sub(byte* big1, int sz_big1, byte* big2, int sz_big2, byte* vr, int sz_vr) -> int
+csbiginteger_lib.csbiginteger_mod.argtypes = [
+    ctypes.c_void_p, ctypes.c_int, ctypes.c_void_p, ctypes.c_int, ctypes.c_void_p, ctypes.c_int]
+csbiginteger_lib.csbiginteger_mod.restype = ctypes.c_int
 
 # ======================================================================
 # BigInteger class stores a little-endian ctypes bytearray on self._data
@@ -131,6 +143,36 @@ class BigInteger(object):
             raise ValueError('Something wrong with BigInteger sub()')
         return big3
 
+    def mul(self, other):
+        if type(other) is int:
+            other = BigInteger(other)
+        big3 = BigInteger()  # create new array
+        ret = csbiginteger_lib.csbiginteger_mul(
+            self._data, self._length, other._data, other._length, big3._data, big3._datasize)
+        if ret == 0:
+            raise ValueError('Something wrong with BigInteger mul()')
+        return big3
+
+    def div(self, other):
+        if type(other) is int:
+            other = BigInteger(other)
+        big3 = BigInteger()  # create new array
+        ret = csbiginteger_lib.csbiginteger_div(
+            self._data, self._length, other._data, other._length, big3._data, big3._datasize)
+        if ret == 0:
+            raise ValueError('Something wrong with BigInteger div()')
+        return big3
+
+    def mod(self, other):
+        if type(other) is int:
+            other = BigInteger(other)
+        big3 = BigInteger()  # create new array
+        ret = csbiginteger_lib.csbiginteger_mod(
+            self._data, self._length, other._data, other._length, big3._data, big3._datasize)
+        if ret == 0:
+            raise ValueError('Something wrong with BigInteger mod()')
+        return big3
+
     def __repr__(self):
         return str(self)
 
@@ -145,3 +187,13 @@ class BigInteger(object):
 
     def __sub__(self, other):
         return self.sub(other)
+
+    def __mul__(self, other):
+        return self.mul(other)
+
+    # truediv does not exist 
+    def __floordiv__(self, other):
+        return self.div(other)
+
+    def __mod__(self, other):
+        return self.mod(other)
