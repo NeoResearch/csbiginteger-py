@@ -7,6 +7,8 @@ import os
 import os.path
 import re
 
+from functools import total_ordering
+
 csbiginteger_lib = ctypes.cdll.LoadLibrary('csbiginteger/csbiginteger.so')
 # csbiginteger_to_string (byte* vb, int sz_vb, int base, char* sr, int sz_sr) -> bool
 csbiginteger_lib.csbiginteger_to_string.argtypes = [
@@ -63,7 +65,7 @@ csbiginteger_lib.csbiginteger_lt.restype = ctypes.c_bool
 # The total allocated size of self._data is self._datasize (bytes), and its used size is self._length (bytes).
 # ======================================================================
 
-
+@total_ordering
 class BigInteger(object):
     # param may be: int, bytearray, bytes, string (parsed with base)
     # bytes and bytearray should be received in little-endian format (same as to_bytearray() returns)
@@ -264,8 +266,8 @@ class BigInteger(object):
     def __eq__(self, other):
         return self.eq(other)
 
-    def __gt__(self, other):
-        return self.gt(other)
+    #def __gt__(self, other):
+    #    return self.gt(other)
 
     def __lt__(self, other):
         return self.lt(other)
