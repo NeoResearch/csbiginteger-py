@@ -112,6 +112,8 @@ class BigInteger(object):
         return strdata.value.decode()
 
     def add(self, other):
+        if type(other) is int:
+            other = BigInteger(other)
         big3 = BigInteger()  # create new array
         ret = csbiginteger_lib.csbiginteger_add(
             self._data, self._length, other._data, other._length, big3._data, big3._datasize)
@@ -120,6 +122,8 @@ class BigInteger(object):
         return big3
 
     def sub(self, other):
+        if type(other) is int:
+            other = BigInteger(other)
         big3 = BigInteger()  # create new array
         ret = csbiginteger_lib.csbiginteger_sub(
             self._data, self._length, other._data, other._length, big3._data, big3._datasize)
@@ -132,3 +136,12 @@ class BigInteger(object):
 
     def __str__(self):
         return self.to_str(10)
+
+    # ---------
+    # operators
+    # ---------
+    def __add__(self, other):
+        return self.add(other)
+
+    def __sub__(self, other):
+        return self.sub(other)
