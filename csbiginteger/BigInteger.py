@@ -44,14 +44,27 @@ csbiginteger_lib.csbiginteger_sub.restype = ctypes.c_int
 csbiginteger_lib.csbiginteger_mul.argtypes = [
     ctypes.c_void_p, ctypes.c_int, ctypes.c_void_p, ctypes.c_int, ctypes.c_void_p, ctypes.c_int]
 csbiginteger_lib.csbiginteger_mul.restype = ctypes.c_int
-# csbiginteger_sub(byte* big1, int sz_big1, byte* big2, int sz_big2, byte* vr, int sz_vr) -> int
+# csbiginteger_div(byte* big1, int sz_big1, byte* big2, int sz_big2, byte* vr, int sz_vr) -> int
 csbiginteger_lib.csbiginteger_div.argtypes = [
     ctypes.c_void_p, ctypes.c_int, ctypes.c_void_p, ctypes.c_int, ctypes.c_void_p, ctypes.c_int]
 csbiginteger_lib.csbiginteger_div.restype = ctypes.c_int
-# csbiginteger_sub(byte* big1, int sz_big1, byte* big2, int sz_big2, byte* vr, int sz_vr) -> int
+# csbiginteger_mod(byte* big1, int sz_big1, byte* big2, int sz_big2, byte* vr, int sz_vr) -> int
 csbiginteger_lib.csbiginteger_mod.argtypes = [
     ctypes.c_void_p, ctypes.c_int, ctypes.c_void_p, ctypes.c_int, ctypes.c_void_p, ctypes.c_int]
 csbiginteger_lib.csbiginteger_mod.restype = ctypes.c_int
+# csbiginteger_eq(byte* big1, int sz_big1, byte* big2, int sz_big2) -> bool
+csbiginteger_lib.csbiginteger_eq.argtypes = [
+    ctypes.c_void_p, ctypes.c_int, ctypes.c_void_p, ctypes.c_int]
+csbiginteger_lib.csbiginteger_eq.restype = ctypes.c_bool
+# csbiginteger_gt(byte* big1, int sz_big1, byte* big2, int sz_big2) -> bool
+csbiginteger_lib.csbiginteger_gt.argtypes = [
+    ctypes.c_void_p, ctypes.c_int, ctypes.c_void_p, ctypes.c_int]
+csbiginteger_lib.csbiginteger_gt.restype = ctypes.c_bool
+# csbiginteger_lt(byte* big1, int sz_big1, byte* big2, int sz_big2) -> bool
+csbiginteger_lib.csbiginteger_lt.argtypes = [
+    ctypes.c_void_p, ctypes.c_int, ctypes.c_void_p, ctypes.c_int]
+csbiginteger_lib.csbiginteger_lt.restype = ctypes.c_bool
+
 
 # ======================================================================
 # BigInteger class stores a little-endian ctypes bytearray on self._data
@@ -115,7 +128,8 @@ class BigInteger(object):
         return bytearray(self._data)[:self._length]
 
     def to_str(self, base=16):
-        strsize = self.std_size*100 # TODO: calculate precise size here (for base 10 and 2 for example). for 16 is std_size*2
+        # TODO: calculate precise size here (for base 10 and 2 for example). for 16 is std_size*2
+        strsize = self.std_size*100
         strdata = (ctypes.c_char*strsize)()
         rbool = csbiginteger_lib.csbiginteger_to_string(
             self._data, self._length, base, strdata, strsize)
@@ -173,6 +187,27 @@ class BigInteger(object):
             raise ValueError('Something wrong with BigInteger mod()')
         return big3
 
+    def eq(self, other):
+        if type(other) is int:
+            other = BigInteger(other)
+        ret = csbiginteger_lib.csbiginteger_eq(
+            self._data, self._length, other._data, other._length)
+        return ret # bool
+
+    def lt(self, other):
+        if type(other) is int:
+            other = BigInteger(other)
+        ret = csbiginteger_lib.csbiginteger_lt(
+            self._data, self._length, other._data, other._length)
+        return ret # bool
+
+    def gt(self, other):
+        if type(other) is int:
+            other = BigInteger(other)
+        ret = csbiginteger_lib.csbiginteger_gt(
+            self._data, self._length, other._data, other._length)
+        return ret # bool
+
     def __repr__(self):
         return str(self)
 
@@ -191,9 +226,23 @@ class BigInteger(object):
     def __mul__(self, other):
         return self.mul(other)
 
-    # truediv does not exist 
     def __floordiv__(self, other):
+        return self.div(other)
+
+    # truediv does not exist (using floordiv)
+    def __truediv__(self, other):
         return self.div(other)
 
     def __mod__(self, other):
         return self.mod(other)
+
+    # comparisons
+    # -----------
+    def __eq__(self, other):
+        return self.eq(other)
+
+    def __gt__(self, other):
+        return self.gt(other)
+
+    def __lt__(self, other):
+        return self.lt(other)
