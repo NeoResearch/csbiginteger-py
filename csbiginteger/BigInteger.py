@@ -35,7 +35,8 @@ csbiginteger_lib.csbiginteger_sub.argtypes = [ctypes.c_void_p, ctypes.c_int, cty
 csbiginteger_lib.csbiginteger_sub.restype  = ctypes.c_int
 
 class BigInteger(object):
-    # param may be: int, bytearray, string (parsed with base)
+    # param may be: int, bytearray, bytes, string (parsed with base)
+    # bytes and bytearray should be received in little-endian format (same as to_bytearray() returns)
     def __init__(self, param = 0, base = 10):
         self.std_size = 256 # 256 bytes, standard size (TODO: improve this with better logic, but now it's enough)
         if type(param) is int:
@@ -76,6 +77,7 @@ class BigInteger(object):
     def to_long(self):
         return csbiginteger_lib.csbiginteger_to_long(self._data, self._length)
 
+    # bytearray is returned in little-endian format
     def to_bytearray(self):
         return bytearray(self._data)[:self._length]
 
