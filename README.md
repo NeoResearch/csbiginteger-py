@@ -9,6 +9,7 @@ This project uses csBigInteger.cpp portable C++ project: https://github.com/neor
 ### build dependencies
 
 First, you need to have `csbiginteger.so` shared library (just type `make vendor`). 
+This command will also install debian/ubuntu dependency on GNU GMP library (from csBigInteger.cpp project): `sudo apt install libgmp-dev`.
 
 Don't worry, we are already shipping a `linux x86-64` library for you (no default windows build yet.. help is appreciated!).
 
