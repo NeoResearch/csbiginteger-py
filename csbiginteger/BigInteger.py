@@ -91,6 +91,7 @@ class BigInteger(object):
     def length(self):
         return self._length
 
+    # returns value in signed int32 limit (or exception)
     def to_int(self):
         return csbiginteger_lib.csbiginteger_to_int(self._data, self._length)
 
@@ -102,7 +103,7 @@ class BigInteger(object):
         return bytearray(self._data)[:self._length]
 
     def to_str(self, base=16):
-        strsize = self.std_size*2
+        strsize = self.std_size*100 # TODO: calculate precise size here (for base 10 and 2 for example). for 16 is std_size*2
         strdata = (ctypes.c_char*strsize)()
         rbool = csbiginteger_lib.csbiginteger_to_string(
             self._data, self._length, base, strdata, strsize)
