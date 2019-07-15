@@ -134,7 +134,7 @@ class BigInteger(object):
             self._data, self._length, other._data, other._length, big3._data, big3._datasize)
         if ret == 0:
             raise ValueError('Something wrong with BigInteger add()')
-        big3._length = ret # update correct length
+        big3._length = ret  # update correct length
         return big3
 
     def sub(self, other):
@@ -145,7 +145,7 @@ class BigInteger(object):
             self._data, self._length, other._data, other._length, big3._data, big3._datasize)
         if ret == 0:
             raise ValueError('Something wrong with BigInteger sub()')
-        big3._length = ret # update correct length
+        big3._length = ret  # update correct length
         return big3
 
     def mul(self, other):
@@ -156,7 +156,7 @@ class BigInteger(object):
             self._data, self._length, other._data, other._length, big3._data, big3._datasize)
         if ret == 0:
             raise ValueError('Something wrong with BigInteger mul()')
-        big3._length = ret # update correct length
+        big3._length = ret  # update correct length
         return big3
 
     def div(self, other):
@@ -167,7 +167,7 @@ class BigInteger(object):
             self._data, self._length, other._data, other._length, big3._data, big3._datasize)
         if ret == 0:
             raise ValueError('Something wrong with BigInteger div()')
-        big3._length = ret # update correct length
+        big3._length = ret  # update correct length
         return big3
 
     def mod(self, other):
@@ -178,7 +178,7 @@ class BigInteger(object):
             self._data, self._length, other._data, other._length, big3._data, big3._datasize)
         if ret == 0:
             raise ValueError('Something wrong with BigInteger mod()')
-        big3._length = ret # update correct length
+        big3._length = ret  # update correct length
         return big3
 
     def shl(self, other):
@@ -189,7 +189,7 @@ class BigInteger(object):
             self._data, self._length, other._data, other._length, big3._data, big3._datasize)
         if ret == 0:
             raise ValueError('Something wrong with BigInteger shl()')
-        big3._length = ret # update correct length
+        big3._length = ret  # update correct length
         return big3
 
     def shr(self, other):
@@ -200,7 +200,7 @@ class BigInteger(object):
             self._data, self._length, other._data, other._length, big3._data, big3._datasize)
         if ret == 0:
             raise ValueError('Something wrong with BigInteger shr()')
-        big3._length = ret # update correct length
+        big3._length = ret  # update correct length
         return big3
 
     def eq(self, other):
@@ -245,10 +245,15 @@ class BigInteger(object):
     def __mul__(self, other):
         return self.mul(other)
 
+    # note that python usually follows 'pure floor' operation here, on a // b => floor(a/b)
+    # example: -5 // 2 => -3 (standard int on python)
+    # however, this library follows hardware-standard (from c/c++/java/fortran), of truncating positive or negative
+    # so, here: BigInteger(-5) // BigInteger(2) => -2 ("rounding" up, not down)
+    # floordiv is thus not a good name, since it's only floor for positive division, but ceil for negative, but that's what we have :)
     def __floordiv__(self, other):
         return self.div(other)
 
-    # truediv does not exist (using floordiv)
+    # truediv does not exist (using a // b)
     def __truediv__(self, other):
         return self.div(other)
 
@@ -266,7 +271,7 @@ class BigInteger(object):
     def __eq__(self, other):
         return self.eq(other)
 
-    #def __gt__(self, other):
+    # def __gt__(self, other):
     #    return self.gt(other)
 
     def __lt__(self, other):
