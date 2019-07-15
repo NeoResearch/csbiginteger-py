@@ -49,6 +49,8 @@ class BigInteger(object):
             if sz == 0:
                 raise ValueError('Something wrong with BigInteger. Zero size.')
             self._length = sz
+        if type(param) is bytearray:
+            param = bytes(param) # bytearray to bytes
         if type(param) is bytes:
             self._length = len(param)
             self._datasize = self._length  # size is not standard, is less. exactly what is needed
