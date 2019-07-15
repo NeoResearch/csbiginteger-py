@@ -95,9 +95,6 @@ class BigInteger(object):
 
         # more options here?
 
-    def length(self):
-        return self._length
-
     # returns value in signed int32 limit (or exception)
     def to_int(self):
         if self.__gt__(2**31-1):
@@ -223,6 +220,9 @@ class BigInteger(object):
 
     def __str__(self):
         return self.to_str(10)
+
+    def __len__(self):
+        return self._length
 
     # ---------
     # operators
