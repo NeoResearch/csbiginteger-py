@@ -18,4 +18,4 @@ vendor:
 
 clean:
 	#rm build/*.so 
-	rm csBigInteger/*.pyc
+	rm csbiginteger/*.pyc
