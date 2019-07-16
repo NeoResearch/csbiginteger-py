@@ -128,3 +128,5 @@ to_str:  0x63
 MIT License
 
 2019
+
+City of Research (CoR) = City Of Zion + NeoResearch 
