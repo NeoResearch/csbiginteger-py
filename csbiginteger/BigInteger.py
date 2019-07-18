@@ -1,13 +1,9 @@
 #!/usr/bin/python3
 
 import ctypes
-#from ctypes import *
-
-import os
-import os.path
-import re
-
 from functools import total_ordering
+from typing import TypeVar, Type
+T = TypeVar('T', bound='BigInteger')
 
 csbiginteger_lib = ctypes.cdll.LoadLibrary('csbiginteger/csbiginteger.so')
 # csbiginteger_to_string (byte* vb, int sz_vb, int base, char* sr, int sz_sr) -> bool
@@ -67,11 +63,18 @@ csbiginteger_lib.csbiginteger_lt.restype = ctypes.c_bool
 
 @total_ordering
 class BigInteger(object):
-    # param may be: int, bytearray, bytes, string (parsed with base)
-    # bytes and bytearray should be received in little-endian format (same as to_bytearray() returns)
-    def __init__(self, param=0, base=10):
+    def __init__(self, param=0, base: int = 10) -> T:
+        """
+        Create a BigInteger from the supplied input data
+        Args:
+            param: the input data to create an instance from. Accepted types: float, int, str, bytes/bytearray.
+               bytes are parsed assuming little endian.
+            base: only used when converting from `str` type
+        """
         # 256 bytes, standard size (TODO: improve this with better logic, but now it's enough)
         self.std_size = 256
+        if type(param) is float:
+            param = int(param)
         if type(param) is int:
             param = str(param)  # convert to base-10 integer
             base = 10  # force base 10
@@ -79,44 +82,116 @@ class BigInteger(object):
             param = bytes(param)  # bytearray to bytes
         if type(param) is bytes:
             self._length = len(param)
-            # size is not standard, is less. exactly what is needed
-            self._datasize = self._length
-            self._data = (ctypes.c_uint8 *
-                          self._datasize).from_buffer(bytearray(param))
+            self._data = (ctypes.c_uint8 * self._length).from_buffer(bytearray(param))
         if type(param) is str:
-            self._datasize = self.std_size
-            self._data = (ctypes.c_uint8*self._datasize)()
+            # allocate a standard buffer size to use in the library
+            self._data = (ctypes.c_uint8 * self.std_size)()
+
             strsize = len(param)
-            strdata = (ctypes.c_char *
-                       strsize).from_buffer(bytearray(param, 'ascii'))
-            sz = csbiginteger_lib.csbiginteger_init_s(
-                strdata, base, self._data, self._datasize)
+            strdata = (ctypes.c_char * strsize).from_buffer(bytearray(param, 'ascii'))
+
+            sz = csbiginteger_lib.csbiginteger_init_s(strdata, base, self._data, self.std_size)
             if sz == 0:
                 raise ValueError('Something wrong with BigInteger. Zero size.')
             self._length = sz
 
+            # trim data to exact length
+            alloc = (ctypes.c_uint8 * self._length)
+            new_data = alloc.from_buffer(bytearray(self._data)[:self._length])
+            self._data = new_data
+
         # more options here?
 
-    # returns value in signed int32 limit (or exception)
-    def to_int(self):
+    def __int__(self) -> int:
+        """
+        Convert value to `int` type.
+
+        Raises:
+            OverflowError: if value does not fit in an `int` according to the C# rules
+
+        Returns:
+             int: value in signed int32 limit
+        """
         if self.__gt__(2**31-1):
             raise OverflowError("overflow on signed int32")
         if self.__lt__(-2**31):
             raise OverflowError("underflow on signed int32")
         return int(str(self))
 
-    def to_long(self):
+    def __float__(self) -> float:
+        """
+        Convert value to `long` type.
+
+        Raises:
+            OverflowError: if value does not fit in a `long` according to the C# rules
+
+        Returns:
+             long: value in signed int32 limit
+        """
         if self.__gt__(2**63-1):
             raise OverflowError("overflow on signed int64 (long)")
         if self.__lt__(-2**63):
             raise OverflowError("underflow on signed int64 (long)")
-        return int(str(self))
+        return float(self)
 
-    # bytearray is returned in little-endian format
-    def to_bytearray(self):
+    def __hex__(self) -> str:
+        return self.__to_str(self, base=16)
+
+    @classmethod
+    def from_bytes(cls: Type[T], data: bytes, byteorder: str = 'little', signed: bool = True) -> T:
+        """
+
+        Args:
+            data: input data
+            byteorder: the byte order used to represent the BigInteger. If byteorder is 'big',
+               the most significant byte is at the beginning of the byte array. If
+               byteorder is 'little', the most significant byte is at the end of the
+               byte array. To request the native byte order of the host system, use
+               `sys.byteorder' as the byte order value.
+            signed: will throw an error if set to False as BigInteger is supposed to always be signed.
+               This flag exists to give the same interface as the default int allowing to drop this class in
+               as a replacement while notifying the user when operated incorrectly.
+
+        Returns:
+            BigInteger
+        """
+        if signed is False:
+            raise ValueError("BigInteger can only be used in signed mode")
+
+        if type(data) not in [bytearray, bytes]:
+            raise ValueError("data must be bytes or bytearray")
+
+        if byteorder == 'big':
+            data = bytearray(data)
+            data.reverse()
+        return cls(data)
+
+    def to_bytes(self, length: int, byteorder: str) -> bytearray:
+        """
+        Return an array of bytes representing an integer
+
+        Args:
+            length: Length of bytes object to use.
+                An OverflowError is raised if the integer is not representable with the given number of bytes.
+            byteorder: The byte order used to represent the integer.
+                If byteorder is 'big', the most significant byte is at the beginning of the byte array. If
+                byteorder is 'little', the most significant byte is at the end of the byte array. To request
+                the native byte order of the host system, use `sys.byteorder' as the byte order value.
+
+        Returns:
+             bytearray: a byte array in the specified byteorder representing the BigInteger value
+        """
+        if length < self._length:
+            raise OverflowError()
+
+        if byteorder == 'big':
+            data = bytearray(self._data)[:self._length]
+            data.reverse()
+            return data
+
         return bytearray(self._data)[:self._length]
 
-    def to_str(self, base=16):
+    def __to_str(self, base: int = 16) -> str:
         # TODO: calculate precise size here (for base 10 and 2 for example). for 16 is std_size*2
         strsize = self.std_size*100
         strdata = (ctypes.c_char*strsize)()
@@ -126,153 +201,162 @@ class BigInteger(object):
             raise ValueError('Something wrong with BigInteger to_str()')
         return strdata.value.decode()
 
-    def add(self, other):
-        if type(other) is int:
-            other = BigInteger(other)
-        big3 = BigInteger()  # create new array
-        ret = csbiginteger_lib.csbiginteger_add(
-            self._data, self._length, other._data, other._length, big3._data, big3._datasize)
-        if ret == 0:
-            raise ValueError('Something wrong with BigInteger add()')
-        big3._length = ret  # update correct length
-        return big3
-
-    def sub(self, other):
-        if type(other) is int:
-            other = BigInteger(other)
-        big3 = BigInteger()  # create new array
-        ret = csbiginteger_lib.csbiginteger_sub(
-            self._data, self._length, other._data, other._length, big3._data, big3._datasize)
-        if ret == 0:
-            raise ValueError('Something wrong with BigInteger sub()')
-        big3._length = ret  # update correct length
-        return big3
-
-    def mul(self, other):
-        if type(other) is int:
-            other = BigInteger(other)
-        big3 = BigInteger()  # create new array
-        ret = csbiginteger_lib.csbiginteger_mul(
-            self._data, self._length, other._data, other._length, big3._data, big3._datasize)
-        if ret == 0:
-            raise ValueError('Something wrong with BigInteger mul()')
-        big3._length = ret  # update correct length
-        return big3
-
-    def div(self, other):
-        if type(other) is int:
-            other = BigInteger(other)
-        big3 = BigInteger()  # create new array
-        ret = csbiginteger_lib.csbiginteger_div(
-            self._data, self._length, other._data, other._length, big3._data, big3._datasize)
-        if ret == 0:
-            raise ValueError('Something wrong with BigInteger div()')
-        big3._length = ret  # update correct length
-        return big3
-
-    def mod(self, other):
-        if type(other) is int:
-            other = BigInteger(other)
-        big3 = BigInteger()  # create new array
-        ret = csbiginteger_lib.csbiginteger_mod(
-            self._data, self._length, other._data, other._length, big3._data, big3._datasize)
-        if ret == 0:
-            raise ValueError('Something wrong with BigInteger mod()')
-        big3._length = ret  # update correct length
-        return big3
-
-    def shl(self, other):
-        if type(other) is int:
-            other = BigInteger(other)
-        big3 = BigInteger()  # create new array
-        ret = csbiginteger_lib.csbiginteger_shl(
-            self._data, self._length, other._data, other._length, big3._data, big3._datasize)
-        if ret == 0:
-            raise ValueError('Something wrong with BigInteger shl()')
-        big3._length = ret  # update correct length
-        return big3
-
-    def shr(self, other):
-        if type(other) is int:
-            other = BigInteger(other)
-        big3 = BigInteger()  # create new array
-        ret = csbiginteger_lib.csbiginteger_shr(
-            self._data, self._length, other._data, other._length, big3._data, big3._datasize)
-        if ret == 0:
-            raise ValueError('Something wrong with BigInteger shr()')
-        big3._length = ret  # update correct length
-        return big3
-
-    def eq(self, other):
-        if type(other) is int:
-            other = BigInteger(other)
-        ret = csbiginteger_lib.csbiginteger_eq(
-            self._data, self._length, other._data, other._length)
-        return ret  # bool
-
-    def lt(self, other):
-        if type(other) is int:
-            other = BigInteger(other)
-        ret = csbiginteger_lib.csbiginteger_lt(
-            self._data, self._length, other._data, other._length)
-        return ret  # bool
-
-    def gt(self, other):
-        if type(other) is int:
-            other = BigInteger(other)
-        ret = csbiginteger_lib.csbiginteger_gt(
-            self._data, self._length, other._data, other._length)
-        return ret  # bool
-
-    def __repr__(self):
+    """
+    Support build-ins
+    """
+    def __repr__(self) -> str:
         return str(self)
 
-    def __str__(self):
-        return self.to_str(10)
+    def __str__(self) -> str:
+        return self.__to_str(base=10)
 
-    def __len__(self):
+    def __len__(self) -> int:
         return self._length
 
-    # ---------
-    # operators
-    # ---------
-    def __add__(self, other):
-        return self.add(other)
+    """
+    Binary arithmetic operators
+    """
+    def __add__(self, other) -> T:
+        if type(other) is int:
+            other = self.__class__(other)
 
-    def __sub__(self, other):
-        return self.sub(other)
+        _data = bytes(self.std_size)
+        _data_sz = ctypes.c_int(self.std_size)
 
-    def __mul__(self, other):
-        return self.mul(other)
+        len = csbiginteger_lib.csbiginteger_add(self._data, self._length, other._data, other._length, _data, _data_sz)
 
-    # note that python usually follows 'pure floor' operation here, on a // b => floor(a/b)
-    # example: -5 // 2 => -3 (standard int on python)
-    # however, this library follows hardware-standard (from c/c++/java/fortran), of truncating positive or negative
-    # so, here: BigInteger(-5) // BigInteger(2) => -2 ("rounding" up, not down)
-    # floordiv is thus not a good name, since it's only floor for positive division, but ceil for negative, but that's what we have :)
-    def __floordiv__(self, other):
-        return self.div(other)
+        if len == 0:
+            raise ValueError('Something wrong with BigInteger add()')
 
-    # truediv does not exist (using a // b)
-    def __truediv__(self, other):
-        return self.div(other)
+        return self.__class__(_data[:len])
 
-    def __mod__(self, other):
-        return self.mod(other)
+    def __sub__(self, other) -> T:
+        if type(other) is int:
+            other = self.__class__(other)
 
-    def __rshift__(self, other):
-        return self.shr(other)
+        _data = bytes(self.std_size)
+        _data_sz = ctypes.c_int(self.std_size)
 
-    def __lshift__(self, other):
-        return self.shl(other)
+        len = csbiginteger_lib.csbiginteger_sub(self._data, self._length, other._data, other._length, _data, _data_sz)
 
-    # comparisons
-    # -----------
-    def __eq__(self, other):
-        return self.eq(other)
+        if len == 0:
+            raise ValueError('Something wrong with BigInteger sub()')
 
-    # def __gt__(self, other):
-    #    return self.gt(other)
+        return self.__class__(_data[:len])
 
-    def __lt__(self, other):
-        return self.lt(other)
+    def __mul__(self, other) -> T:
+        if type(other) is int:
+            other = self.__class__(other)
+
+        _data = bytes(self.std_size)
+        _data_sz = ctypes.c_int(self.std_size)
+
+        len = csbiginteger_lib.csbiginteger_mul(self._data, self._length, other._data, other._length, _data, _data_sz)
+
+        if len == 0:
+            raise ValueError('Something wrong with BigInteger mul()')
+
+        return self.__class__(_data[:len])
+
+    def __floordiv__(self, other) -> T:
+        """
+            note that python usually follows 'pure floor' operation here, on a // b => floor(a/b)
+            example: -5 // 2 => -3 (standard int on python)
+            however, this library follows hardware-standard (from c/c++/java/fortran), of truncating positive or negative
+            so, here: BigInteger(-5) // BigInteger(2) => -2 ("rounding" up, not down)
+            floordiv is thus not a good name, since it's only floor for positive division, but ceil for negative, but that's what we have :)
+        """
+
+        if type(other) is int:
+            other = self.__class__(other)
+
+        _data = bytes(self.std_size)
+        _data_sz = ctypes.c_int(self.std_size)
+
+        len = csbiginteger_lib.csbiginteger_div(self._data, self._length, other._data, other._length, _data, _data_sz)
+
+        if len == 0:
+            raise ValueError('Something wrong with BigInteger div()')
+
+        return self.__class__(_data[:len])
+
+    def __truediv__(self, other) -> T:
+        """
+        truediv does not exist (using a // b)
+        """
+        return self.__floordiv__(other)
+
+    def __mod__(self, other) -> T:
+        if type(other) is int:
+            other = self.__class__(other)
+
+        _data = bytes(self.std_size)
+        _data_sz = ctypes.c_int(self.std_size)
+
+        len = csbiginteger_lib.csbiginteger_mod(self._data, self._length, other._data, other._length, _data, _data_sz)
+
+        if len == 0:
+            raise ValueError('Something wrong with BigInteger mod()')
+
+        return self.__class__(_data[:len])
+
+    def __rshift__(self, other) -> T:
+        if type(other) is int:
+            other = self.__class__(other)
+
+        _data = bytes(self.std_size)
+        _data_sz = ctypes.c_int(self.std_size)
+
+        len = csbiginteger_lib.csbiginteger_shr(self._data, self._length, other._data, other._length, _data, _data_sz)
+        if len == 0:
+            raise ValueError('Something wrong with BigInteger shr()')
+
+        return self.__class__(_data[:len])
+
+    def __lshift__(self, other) -> T:
+        if type(other) is int:
+            other = BigInteger(other)
+
+        _data = bytes(self.std_size)
+        _data_sz = ctypes.c_int(self.std_size)
+
+        len = csbiginteger_lib.csbiginteger_shl(self._data, self._length, other._data, other._length, _data, _data_sz)
+        if len == 0:
+            raise ValueError('Something wrong with BigInteger shl()')
+
+        return self.__class__(_data[:len])
+
+    """
+    Rich comparison methods            
+    """
+    def __eq__(self, other) -> bool:
+        if type(other) is int:
+            other = self.__class__(other)
+        ret = csbiginteger_lib.csbiginteger_eq(
+            self._data, self._length, other._data, other._length)
+        return ret
+
+    def __gt__(self, other) -> bool:
+        if type(other) is int:
+            other = self.__class__(other)
+
+        ret = csbiginteger_lib.csbiginteger_gt(self._data, self._length, other._data, other._length)
+        return ret
+
+    def __lt__(self, other) -> bool:
+        if type(other) is int:
+            other = self.__class__(other)
+
+        ret = csbiginteger_lib.csbiginteger_lt(self._data, self._length, other._data, other._length)
+        return ret
+
+    """
+    Unary arithmetic operators
+    """
+    def __abs__(self) -> T:
+        if self < 0:
+            return -self
+        return self
+
+    def __neg__(self) -> T:
+        return self * -1
