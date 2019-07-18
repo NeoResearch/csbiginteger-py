@@ -8,6 +8,7 @@ from functools import total_ordering
 
 from msl.loadlib import LoadLibrary
 
+# remember to execute first: cd csbiginteger/dotnet && dotnet build -c Release
 net = LoadLibrary('csbiginteger/dotnet/bin/Release/netstandard2.0/csbiginteger.dll', 'net')
 
 biglib = net.lib.csbiglib.BigIntegerLib()
