@@ -5,7 +5,7 @@ from functools import total_ordering
 from typing import TypeVar, Type
 T = TypeVar('T', bound='BigInteger')
 
-csbiginteger_lib = ctypes.cdll.LoadLibrary('csbiginteger/csbiginteger.so')
+csbiginteger_lib = ctypes.cdll.LoadLibrary('csbiginteger/cpp/csbiginteger.so')
 # csbiginteger_to_string (byte* vb, int sz_vb, int base, char* sr, int sz_sr) -> bool
 csbiginteger_lib.csbiginteger_to_string.argtypes = [
     ctypes.c_void_p, ctypes.c_int, ctypes.c_int, ctypes.c_char_p, ctypes.c_int]
