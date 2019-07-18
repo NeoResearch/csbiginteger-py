@@ -47,6 +47,9 @@ sudo apt install mono-complete
 
 `dotnet build -c Release` (this should generate `csbiginteger.dll` inside `dotnet/bin/` folder)
 
+To publish:
+`dotnet publish --configuration Release  --self-contained` (see publish folder on `bin`)
+
 ## How to use it?
 
 Try `test.py` code, it should work! (or just type `make run`):
