@@ -9,6 +9,11 @@ import ctypes
 from csbiginteger.BigInteger import BigInteger
 
 # or use dotnet version
+# cd csbiginteger/dotnet
+# dotnet build -c Release
+# dotnet publish --configuration Release  --self-contained
+### dotnet pack --configuration Release (not used)
+
 from csbiginteger.BigIntegerNet import BigIntegerNet
 
 
