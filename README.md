@@ -17,13 +17,17 @@ Don't worry, we are already shipping a `linux x86-64` library for you (no defaul
 
 ### build dependencies (C# dotnet)
 
-python3.7 -m pip install pip
+If you want to use ported native version, you need to install few extra dotnet dependencies.
 
-pip install msl-loadlib (or `pip install msl-loadlib --user`)
+`python3.7 -m pip install pip`
 
-pip install pycparser --user
-pip install pythonnet --user
+`pip install msl-loadlib --user`
 
+`pip install pycparser --user`
+
+`pip install pythonnet --user`
+
+These may require `mono` to be installed.
 
 #### Mono deps (linux)
 
@@ -37,15 +41,11 @@ sudo apt update
 sudo apt install mono-complete
 ```
 
-```py
-cd dnet && dotnet build && python3
->>> from msl.loadlib import LoadLibrary
->>> net = LoadLibrary('./bin/Debug/netstandard2.0/csbiginteger.dll', 'net')
->>> net.lib.StringManipulation.reverse_string('abcdefghijklmnopqrstuvwxyz')
-'abcdefghijklmnopqrstuvwxyz'
+#### building dotnet project library
 
-```
+`cd csbiginteger/dotnet`
 
+`dotnet build -c Release` (this should generate `csbiginteger.dll` inside `dotnet/bin/` folder)
 
 ## How to use it?
 
@@ -53,6 +53,9 @@ Try `test.py` code, it should work! (or just type `make run`):
 
 ```py
 from csbiginteger.BigInteger import BigInteger
+
+# or, use dotnet version
+from csbiginteger.BigIntegerNet import BigIntegerNet
 
 def main():
     big = BigInteger()
