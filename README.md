@@ -2,18 +2,50 @@
 
 ## csBigInteger for Python 3
 
-This project is part of the [csBigInteger](https://github.com/neoresearch/csBigInteger) macro project, a C# BigInteger implementation on Python 
+This project is part of the [csBigInteger](https://github.com/neoresearch/csBigInteger) macro project, a C# BigInteger implementation on Python
 
 This project uses csBigInteger.cpp portable C++ project: https://github.com/neoresearch/csBigInteger.cpp
 
-### build dependencies
+### build dependencies (C++ portable)
 
-First, you need to have `csbiginteger.so` shared library (just type `make vendor`). 
+First, you need to have `csbiginteger.so` shared library (just type `make vendor`).
 This command will also install debian/ubuntu dependency on GNU GMP library (from csBigInteger.cpp project): `sudo apt install libgmp-dev`.
 
 Don't worry, we are already shipping a `linux x86-64` library for you (no default windows build yet.. help is appreciated!).
 
 **Important:** Remember to clone `csBigInteger.cpp` portable submodule (`git clone --recursive` or `git pull --recurse-submodules`).
+
+### build dependencies (C# dotnet)
+
+python3.7 -m pip install pip
+
+pip install msl-loadlib (or `pip install msl-loadlib --user`)
+
+pip install pycparser --user
+pip install pythonnet --user
+
+
+#### Mono deps (linux)
+
+Deepin uses Ubuntu 16.04 deps:
+
+```
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+sudo apt install apt-transport-https ca-certificates
+echo "deb https://download.mono-project.com/repo/ubuntu stable-xenial main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
+sudo apt update
+sudo apt install mono-complete
+```
+
+```py
+cd dnet && dotnet build && python3
+>>> from msl.loadlib import LoadLibrary
+>>> net = LoadLibrary('./bin/Debug/netstandard2.0/csbiginteger.dll', 'net')
+>>> net.lib.StringManipulation.reverse_string('abcdefghijklmnopqrstuvwxyz')
+'abcdefghijklmnopqrstuvwxyz'
+
+```
+
 
 ## How to use it?
 
