@@ -5,7 +5,7 @@ from csbiginteger.BigInteger import BigInteger
 
 from functools import total_ordering
 
-
+# requires: pip install msl-loadlib pycparser pythonnet
 from msl.loadlib import LoadLibrary
 
 # remember to execute first: cd csbiginteger/dotnet && dotnet build -c Release
