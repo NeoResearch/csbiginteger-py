@@ -4,7 +4,8 @@ import ctypes
 
 from csbiginteger.BigInteger import BigInteger
 
-#if using 'csbiginteger_mono.so' implementation (default), requires 'csbiginteger_dotnet.dll' somewhere on path
+# default is using 'csbiginteger_gmp.so'
+# if using 'csbiginteger_mono.so' implementation (default), also requires 'csbiginteger_dotnet.dll' somewhere on path (get it inside package)
 
 def main():
     big = BigInteger()
