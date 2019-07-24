@@ -54,7 +54,7 @@ To publish:
 
 ## How to use it?
 
-Try `test.py` code, it should work! (or just type `make run`):
+Try `python3 test_cpp.py` code, it should work! (or just type `make run`):
 
 ```py
 from csbiginteger.BigInteger import BigInteger
@@ -169,4 +169,4 @@ MIT License
 
 2019
 
-City of Research (CoR) = City Of Zion + NeoResearch 
+City of Research (CoR) = City Of Zion + NeoResearch

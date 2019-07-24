@@ -3,7 +3,7 @@
 
 # test python
 run:
-	./test.py
+	./test_cpp.py
 #	export LD_LIBRARY_PATH=. && ./test.py
 
 vendor:
@@ -17,5 +17,5 @@ vendor:
 
 
 clean:
-	#rm build/*.so 
+	#rm build/*.so
 	rm csbiginteger/*.pyc

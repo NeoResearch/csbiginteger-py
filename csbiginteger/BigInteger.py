@@ -5,8 +5,8 @@ from functools import total_ordering
 from typing import TypeVar, Type
 T = TypeVar('T', bound='BigInteger')
 
-#csbiginteger_lib = ctypes.cdll.LoadLibrary('csbiginteger/cpp/csbiginteger_mono.so')
-csbiginteger_lib = ctypes.cdll.LoadLibrary('csbiginteger/cpp/csbiginteger_gmp.so')
+csbiginteger_lib = ctypes.cdll.LoadLibrary('csbiginteger/cpp/csbiginteger_mono.so')
+#csbiginteger_lib = ctypes.cdll.LoadLibrary('csbiginteger/cpp/csbiginteger_gmp.so')
 # csbiginteger_to_string (byte* vb, int sz_vb, int base, char* sr, int sz_sr) -> bool
 csbiginteger_lib.csbiginteger_to_string.argtypes = [
     ctypes.c_void_p, ctypes.c_int, ctypes.c_int, ctypes.c_char_p, ctypes.c_int]
@@ -113,15 +113,15 @@ class BigInteger(object):
         Returns:
              int: value in signed int32 limit
         """
-        if self.__gt__(2**31-1):
-            raise OverflowError("overflow on signed int32")
-        if self.__lt__(-2**31):
-            raise OverflowError("underflow on signed int32")
+        #if self.__gt__(2**31-1):
+        #    raise OverflowError("overflow on signed int32")
+        #if self.__lt__(-2**31):
+        #    raise OverflowError("underflow on signed int32")
         return int(str(self))
 
     def __float__(self) -> float:
         """
-        Convert value to `long` type.
+        Convert value to `float` type.
 
         Raises:
             OverflowError: if value does not fit in a `long` according to the C# rules
@@ -328,7 +328,7 @@ class BigInteger(object):
         return self.__class__(_data[:len])
 
     """
-    Rich comparison methods            
+    Rich comparison methods
     """
     def __eq__(self, other) -> bool:
         if type(other) is int:
@@ -341,14 +341,23 @@ class BigInteger(object):
         if type(other) is int:
             other = self.__class__(other)
 
+        print("GT")
+        print(self)
+        print(other)
         ret = csbiginteger_lib.csbiginteger_gt(self._data, self._length, other._data, other._length)
+        print(ret)
         return ret
 
     def __lt__(self, other) -> bool:
         if type(other) is int:
             other = self.__class__(other)
 
+        print("LT")
+        print(self)
+        print(other)
+
         ret = csbiginteger_lib.csbiginteger_lt(self._data, self._length, other._data, other._length)
+        print(ret)
         return ret
 
     """
