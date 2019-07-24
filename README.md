@@ -4,11 +4,13 @@
 
 This project is part of the [csBigInteger](https://github.com/neoresearch/csBigInteger) macro project, a C# BigInteger implementation on Python
 
-This project uses csBigInteger.cpp portable C++ project: https://github.com/neoresearch/csBigInteger.cpp
+
+There are two different basis for this project: one native dotnet/python and another that uses csBigInteger.cpp portable C++ project: https://github.com/neoresearch/csBigInteger.cpp
+Note that portable C++ itself has __two implementations__, `csbiginteger_gmp.so` and `csbiginteger_mono.so`. The GMP is straightforward, since it only depends on GNU GMP runtimes, and Mono implementation depends on mono runtime and `csbiginteger_dotnet.dll`.
 
 ### build dependencies (C++ portable)
 
-First, you need to have `csbiginteger.so` shared library (just type `make vendor`).
+First, you need to have `csbiginteger_gmp.so` (or `csbiginteger_mono.so`) shared library (just type `make vendor`).
 This command will also install debian/ubuntu dependency on GNU GMP library (from csBigInteger.cpp project): `sudo apt install libgmp-dev`.
 
 Don't worry, we are already shipping a `linux x86-64` library for you (no default windows build yet.. help is appreciated!).
