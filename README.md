@@ -13,9 +13,9 @@ Note that portable C++ itself has __two implementations__, `csbiginteger_gmp.so`
 First, you need to have `csbiginteger_gmp.so` (or `csbiginteger_mono.so`) shared library (just type `make vendor`).
 This command will also install debian/ubuntu dependency on GNU GMP library (from csBigInteger.cpp project): `sudo apt install libgmp-dev`.
 
-Don't worry, we are already shipping a `linux x86-64` library for you (no default windows build yet.. help is appreciated!).
+Don't worry, we are already shipping a `linux x86-64` library for you (no default windows build yet.. help is appreciated!). Current default is `csbiginteger_mono.so`, so you will need `csbiginteger_dotnet.dll` on your path (also shipped for you).
 
-**Important:** Remember to clone `csBigInteger.cpp` portable submodule (`git clone --recursive` or `git pull --recurse-submodules`).
+**Important:** Remember to clone `csBigIntegerpp` portable submodule (`git clone --recursive` or `git pull --recurse-submodules`).
 
 ### build dependencies (C# dotnet)
 
